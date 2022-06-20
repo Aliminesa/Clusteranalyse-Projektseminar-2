@@ -11,7 +11,7 @@ library(readxl)
 library(openxlsx)
 Jugendstudie <- read_xlsx("js_data_updated.xlsx")
 
-  
+
 library('ggplot2')
 library('factoextra')
 library('summarytools')
@@ -250,3 +250,6 @@ write.xlsx(Mean19Cluster, "Mean19Cluster.xlsx")
 
 freq(CA1noNA$cluster19) # erst bei der 19-Cluster-Lösung verteilen sich die Faelle besser
                         # Allerdings hat Cluster 14 nur 5 Faelle, das größte Cluster (2) hat 699 Faelle
+
+
+
