@@ -250,12 +250,3 @@ write.xlsx(Mean19Cluster, "Mean19Cluster.xlsx")
 
 freq(CA1noNA$cluster19) # erst bei der 19-Cluster-Lösung verteilen sich die Faelle besser
                         # Allerdings hat Cluster 14 nur 5 Faelle, das größte Cluster (2) hat 699 Faelle
-
-
-######################################## Code USL Data Science letztes Semester
-#### Cluster visualisieren und Vergleiche
-
-# 2 Cluster:
-ggplot(CAmeans, aes(x=EinkommenHEB, y = Wohnraumgroesse, color = factor(cluster2))) +   
-  geom_point() + # zumeist nur geom_point genutzt - Unterschiede am ?bersichtlichsten
-  geom_text(aes(label= BerufeHEB), size = 2, hjust = 0, nudge_x = 0.05) 
