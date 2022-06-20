@@ -1,4 +1,4 @@
-###################
+####################################################
 # Clusteranalyse Projektseminar II
 ###################
 
@@ -14,7 +14,7 @@ Jugendstudie <- read_xlsx("js_data_updated.xlsx")
   
 library('ggplot2')
 library('factoextra')
-
+library('summarytools')
 
 ## Alle interessanten Variablen
 CA <-Jugendstudie[,c("ID",
@@ -102,13 +102,18 @@ CA$well_3 <- recode(CA$well_3, "2=0")
 
 summary(CA)
 
-# Mediansplit Selbstwirksamkeit
+# Mediansplit Selbstwirksamkeit, fester Berufswunsch, Internetnutzung Jobsuche
 CA$efficacy_3 <- recode(CA$efficacy_3, "1=5;2=4;4=2;5=1")
 CA$efficacy_4 <- recode(CA$efficacy_4, "1=5;2=4;4=2;5=1")
 CA$efficacy <- rowMeans(subset(CA, select = c(efficacy_1, efficacy_2, efficacy_3, efficacy_4)))
 summary(CA$efficacy) # Median 3.75
 CA$efficacy <- recode(CA$efficacy, "lo:3.75=0;3.76:hi=1")
-summary(CA$efficacy)
+summary(CA)
+
+CA$asp_edu_3 <- recode(CA$asp_edu_3, "lo:3=0;4:hi=1")
+
+CA$internet <- recode(CA$internet, "lo:4=0;5:hi=1")
+summary(CA)
 
 # Benennung workfields
 
@@ -148,69 +153,24 @@ CA1 <-CA[,c(#"school",      # Schule nominal
                      "ZielStudium","ZielAbi","ZielReal","ZielHaupt","ZielAndere","ZielWeißNicht", # Bildungsaspirationen
                      "Lehre","studieren","arbeiten","weiterfSchule","Praktikum","jobben",
                      "BFD.FSJde","BFD.FSJaus","Ausland","Auslandgrob","Bundeswehr","Anderes","WeißNicht",
-                     "asp_edu_3",                                    # Fester Berufswunsch Skala 1-5 (nicht-sehr)
+                     "asp_edu_3",                                    # Fester Berufswunsch (Mediansplit)
                      "Technik", "Handwerk", "Verkehr", "Soziales", "IT",
                      "Kunst", "Verkauf", "Maschinenbau", "Gesundheit", "Koerperpflege",
                      "Natur.LW", "Bau", "Verwaltung", "Medien", "Produktion",
                      "Recht", "Sicherheit", "Sport",
-                     "worry_job_rec",                                # Sorgen um Arbeitsplatz Skala 1-5 (nicht-sehr)
-                     "worry_job_dicho",                              # Sorge Job niedrig-hoch
-                     "internet",                                     # Internet Informationssuche nicht-sehr wichtig
+                     "worry_job_dicho",                              # Sorge Job nein/ja
+                     "internet",                                     # Internet Informationssuche (mediansplit)
                      "well_1",                                       # wohlfühlen in Klasse nein/ja
                      "well_2",                                       # wohlfühlen in Schule nein/ja
                      "well_3",                                       # genug Freundinnen / Freunde nein/ja
-                     "efficacy",                                     # Selbstwirksamkeit (Mediansplit) niedrig/hoch
+                     "efficacy",                                     # Selbstwirksamkeit (Mediansplit)
                      "anxiety_dicho",                                # Sorgen in der letzten Woche nein/ja
-                     "mentalhealth")]                                # 1-6 (Skala depressiver Symptome - niedrig-hoch)
+                     "mentalhealth_dicho")]                          # depressive Symptome - nein/ja
 
 summary(CA1)
+plot(CA1)
 
 write.xlsx(CA1, "Clusteranalyse1.xlsx")
-
-#### Tabelle mit Mittelwerten der Schulgruppen ### Bitte ignorieren ##############################
-# brauchen wir gerade nicht, da wir nach Befragten Clustern
-CAmeans1 <- aggregate(cbind(sex_wm,
-                           school_full,
-                           birthcountry_out,
-                           migra,
-                           job_1,
-                           job_2,
-                           engagement,
-                           enga_barrier,
-                           ZielStudium,
-                           ZielAbi,
-                           ZielReal,
-                           ZielHaupt,
-                           ZielAndere,
-                           ZielWeißNicht,
-                           Lehre,
-                           studieren,
-                           arbeiten,
-                           weiterfSchule,
-                           Praktikum,
-                           jobben,
-                           BFD.FSJde,
-                           BFD.FSJaus,
-                           Ausland,
-                           Auslandgrob,
-                           Bundeswehr,
-                           Anderes,
-                           WeißNicht,
-                           asp_edu_3,
-                           Technik, Handwerk, Verkehr, Soziales, IT, Kunst,
-                           Verkauf, Maschinenbau, Gesundheit, Koerperpflege,
-                           Natur.LW, Bau, Verwaltung, Medien, Produktion,
-                           Recht, Sicherheit, Sport,
-                           worry_job_rec,
-                           worry_job_dicho,
-                           internet,
-                           well_1,
-                           well_2,
-                           well_3,
-                           efficacy,
-                           anxiety_dicho,
-                           mentalhealth,
-                           mentalhealth_dicho) ~ school, CA1, mean)
 
 #### Durchfuehrung ##################################
 # NAs entfernen
@@ -219,18 +179,18 @@ summary(CA1)
 summary(CA1noNA) ### von 2160 fällen nurnoch 1642 Fälle
 
 # Skalieren - Standardisierte Werte (Z-Transformation) erzeugen für Vergleichbarkeit
-CAv1 <- scale(CA1noNA[2:61])
+CAv1 <- scale(CA1noNA[2:60])
 CAv1
 
 # Ellbogenkriterium / Silhouette
-fviz_nbclust(CAv1, hcut, method = "wss")
+fviz_nbclust(CAv1, hcut, method = "wss", k.max = 30)
   geom_vline(xintercept = 5, linetype = 2)+
   labs(subtitle = "Elbow method")
-# Kein eindeutiger "Knick" erkennbar -> 2/3?
+# Einziger erkennbare Knick am ehesten bei 3, ab 20 wird die Kurve flacher
 
-fviz_nbclust(CAv1, hcut, method = "silhouette")+
+fviz_nbclust(CAv1, hcut, method = "silhouette", k.max = 30)+
   labs(subtitle = "Silhouette method")
-# Maximum eindeutig bei 2 Clustern
+# Peak bei 2 Clustern, aber Höhepunkt bei 19
 
 # Distanzmatrix
 d1 <- dist(CAv1, method = 'euclidean')
@@ -238,46 +198,58 @@ d1ausg <- head(as.matrix(d1))
 
 # Dendrogramme erstellen
 HC <- hclust(d1, method="complete")
-fviz_dend(HC)
-#fviz_dend(HC,2) 
-#fviz_dend(HC,3)
-#fviz_dend(HC,5) # da wir 5 Schultypen haben und wir schauen wollen ob sich die wesentlichen Unterschiede darin zeigen?
-#fviz_dend(HC,15) # eventuell erst ab 20 Clustern eine 15 Cluster wirklich viele Gruppen genauer benannt?
-#fviz_dend(HC,20)
+#fviz_dend(HC)
+#fviz_dend(HC,2)  # Cluster 1 unterscheidet sich sehr stark von den anderen
+#fviz_dend(HC,5)  # da wir 5 Schultypen haben und wir schauen wollen ob sich die wesentlichen Unterschiede darin bemerkbar machen?
+#fviz_dend(HC,19) # eventuell erst bei 19 Clustern ein Großteil der Befragten genauer eingruppiert, sonst viele Extrem-/Sonderfälle?
 
-## Ableiten der Loesung fuer die Cluster
+## Ableiten von Loesungen fuer die Cluster
 # Loesung 2 Cluster
 cluster2 <- cutree(HC, k = 2) 
 head(cluster2)
 CA1noNA$cluster2 <- cluster2
-#CA1$ID <- row.names(CAv1)
 summary(CA1noNA)
 
 # Loesung 5 Cluster
 cluster5 <- cutree(HC, k = 5) 
 head(cluster5)
 CA1noNA$cluster5 <- cluster5
-#CA1$ <- row.names(CAv1)
+summary(CA1noNA)
+
+# Loesung 19 Cluster
+cluster19 <- cutree(HC, k = 19) 
+head(cluster19)
+CA1noNA$cluster19 <- cluster19
 summary(CA1noNA)
 
 #### Vergleich der Clustereigenschaften anhand der verwendeten Variablen
 # Ein Mittelwertvergleich der jeweiligen Cluster und ihrer Auspraegungen der Variablen + Gegenueberstellung mit transpose(t) 
 
 # 2 Cluster: 
-cluster.descr2 <- aggregate(CA1noNA[,2:61], by=list(cluster=CA1noNA$cluster2), mean)
+cluster.descr2 <- aggregate(CA1noNA[,2:60], by=list(cluster=CA1noNA$cluster2), mean)
 cluster.descr2
-t(cluster.descr2)
+Mean2Cluster <- t(cluster.descr2)
+write.xlsx(Mean2Cluster, "Mean2Cluster.xlsx")
 
-#10 Cluster
-cluster.descr10 <- aggregate(CA1noNA[,2:61], by=list(cluster=CA1noNA$cluster10), mean)
-cluster.descr10
-t(cluster.descr10)
+freq(CA1noNA$cluster2) # Cluster 2 kommt nur 25mal vor (1.5%), 1 1617 mal
+                       # Allgemein: Die Frage wie es nach der Schule weiter geht hat sehr wenig Aussagekraft (Bildungsaspirationen 2)
 
+# 5 Cluster:
+cluster.descr5 <- aggregate(CA1noNA[,2:60], by=list(cluster=CA1noNA$cluster5), mean)
+cluster.descr5
+Mean5Cluster <- t(cluster.descr5)
+write.xlsx(Mean5Cluster, "Mean5Cluster.xlsx")
 
+freq(CA1noNA$cluster5) # Häufigstes Cluster: 2 (1525 Faelle), 1: 40 Faelle, die anderen drei entweder 25 oder 26
 
+# 19 Cluster:
+cluster.descr19 <- aggregate(CA1noNA[,2:60], by=list(cluster=CA1noNA$cluster19), mean)
+cluster.descr19
+Mean19Cluster <- t(cluster.descr19)
+write.xlsx(Mean19Cluster, "Mean19Cluster.xlsx")
 
-
-
+freq(CA1noNA$cluster19) # erst bei der 19-Cluster-Lösung verteilen sich die Faelle besser
+                        # Allerdings hat Cluster 14 nur 5 Faelle, das größte Cluster (2) hat 699 Faelle
 
 
 ######################################## Code USL Data Science letztes Semester
