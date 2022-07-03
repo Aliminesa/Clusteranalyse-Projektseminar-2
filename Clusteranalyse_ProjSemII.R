@@ -49,6 +49,7 @@ CA <-Jugendstudie[,c("ID",
                      "mentalhealth_dicho")]
 variable.names(CA)
 str(CA)
+summary(CA)
 CA$ID <- as.character(CA$ID)
 
 CA$school_full <- as.numeric(CA$school_full)
@@ -81,8 +82,8 @@ CA$ZielStudium <- recode(CA$asp_edu_1, "2:7=0")
 CA$ZielAbi <- recode(CA$asp_edu_1, "1=0;2=1;3:7=0")
 CA$ZielReal <- recode(CA$asp_edu_1, "1:2=0;3=1;4:7=0")
 CA$ZielHaupt <- recode(CA$asp_edu_1, "1:3=0;4=1;5:7=0")
-CA$ZielAndere <- recode(CA$asp_edu_1, "1:4=0;5=1;7=0")
-CA$ZielWeißNicht <- recode(CA$asp_edu_1, "1:5=0;7=1")
+CA$ZielAndere <- recode(CA$asp_edu_1, "1:4=0;5=1;6:7=0")
+CA$ZielWeißNicht <- recode(CA$asp_edu_1, "1:5=0;6=1")
 CA$Lehre <- recode(CA$asp_edu_2, "2:13=0")
 CA$studieren <- recode(CA$asp_edu_2, "1=0;2=1;3:13=0")
 CA$arbeiten <- recode(CA$asp_edu_2, "1:2=0;3=1;4:13=0")
@@ -168,7 +169,7 @@ CA1 <-CA[,c(#"school",      # Schule nominal
                      "mentalhealth_dicho")]                          # depressive Symptome - nein/ja
 
 summary(CA1)
-plot(CA1)
+
 
 write.xlsx(CA1, "Clusteranalyse1.xlsx")
 
@@ -186,11 +187,11 @@ CAv1
 fviz_nbclust(CAv1, hcut, method = "wss", k.max = 30)
   geom_vline(xintercept = 5, linetype = 2)+
   labs(subtitle = "Elbow method")
-# Einziger erkennbare Knick am ehesten bei 3, ab 20 wird die Kurve flacher
+# Einziger erkennbare Knick am ehesten bei 2, ab 17 wird die Kurve flacher
 
 fviz_nbclust(CAv1, hcut, method = "silhouette", k.max = 30)+
   labs(subtitle = "Silhouette method")
-# Peak bei 2 Clustern, aber Höhepunkt bei 19
+# 1. Peak bei 6 Clustern, aber Höhepunkt bei 17
 
 # Distanzmatrix
 d1 <- dist(CAv1, method = 'euclidean')
@@ -199,9 +200,9 @@ d1ausg <- head(as.matrix(d1))
 # Dendrogramme erstellen
 HC <- hclust(d1, method="complete")
 #fviz_dend(HC)
-#fviz_dend(HC,2)  # Cluster 1 unterscheidet sich sehr stark von den anderen
-#fviz_dend(HC,5)  # da wir 5 Schultypen haben und wir schauen wollen ob sich die wesentlichen Unterschiede darin bemerkbar machen?
-#fviz_dend(HC,19) # eventuell erst bei 19 Clustern ein Großteil der Befragten genauer eingruppiert, sonst viele Extrem-/Sonderfälle?
+#fviz_dend(HC,2)  # Cluster 1 und 2 unterscheiden sich tendenziell in Bildung und Berufswunsch
+#fviz_dend(HC,5)  # erster Peak - Macht sich eine Clusterung durch die Schultypen bemerkbar?
+#fviz_dend(HC,17) # eventuell erst bei 17 Clustern ein Großteil der Befragten genauer eingruppiert, sonst viele Extrem-/Sonderfälle?
 
 ## Ableiten von Loesungen fuer die Cluster
 # Loesung 2 Cluster
@@ -210,16 +211,16 @@ head(cluster2)
 CA1noNA$cluster2 <- cluster2
 summary(CA1noNA)
 
-# Loesung 5 Cluster
-cluster5 <- cutree(HC, k = 5) 
-head(cluster5)
-CA1noNA$cluster5 <- cluster5
+# Loesung 6 Cluster
+cluster6 <- cutree(HC, k = 6) 
+head(cluster6)
+CA1noNA$cluster6 <- cluster6
 summary(CA1noNA)
 
-# Loesung 19 Cluster
-cluster19 <- cutree(HC, k = 19) 
-head(cluster19)
-CA1noNA$cluster19 <- cluster19
+# Loesung 17 Cluster
+cluster17 <- cutree(HC, k = 17) 
+head(cluster17)
+CA1noNA$cluster17 <- cluster17
 summary(CA1noNA)
 
 #### Vergleich der Clustereigenschaften anhand der verwendeten Variablen
@@ -231,25 +232,44 @@ cluster.descr2
 Mean2Cluster <- t(cluster.descr2)
 write.xlsx(Mean2Cluster, "Mean2Cluster.xlsx")
 
-freq(CA1noNA$cluster2) # Cluster 2 kommt nur 25mal vor (1.5%), 1 1617 mal
-                       # Allgemein: Die Frage wie es nach der Schule weiter geht hat sehr wenig Aussagekraft (Bildungsaspirationen 2)
+freq(CA1noNA$cluster2) # Cluster 2 kommt nur 29mal vor (1.77%), C1 1613 mal
+                       # Die Frage wie es nach der Schule weiter geht hat sehr wenig Aussagekraft (Bildungsaspirationen 2)
+                       # Cluster 2 hat einen bedeutend größeren Anteil an Hauptschülern, streben Real oder Stdudium an, häufiger fester Berufswunsch,
+                       # auffaellig: Berufsbild Produktion/Fertigung sehr stark, stärkere Jobsorgen, aber höhere Selbstwirksamkeit
 
-# 5 Cluster:
-cluster.descr5 <- aggregate(CA1noNA[,2:60], by=list(cluster=CA1noNA$cluster5), mean)
-cluster.descr5
-Mean5Cluster <- t(cluster.descr5)
-write.xlsx(Mean5Cluster, "Mean5Cluster.xlsx")
+# 6 Cluster:
+cluster.descr6 <- aggregate(CA1noNA[,2:60], by=list(cluster=CA1noNA$cluster6), mean)
+cluster.descr6
+Mean6Cluster <- t(cluster.descr6)
+write.xlsx(Mean6Cluster, "Mean6Cluster.xlsx")
 
-freq(CA1noNA$cluster5) # Häufigstes Cluster: 2 (1525 Faelle), 1: 40 Faelle, die anderen drei entweder 25 oder 26
+freq(CA1noNA$cluster6) # Häufigstes Cluster: 1 (1510 Faelle) -> "Mainstream"?
 
-# 19 Cluster:
-cluster.descr19 <- aggregate(CA1noNA[,2:60], by=list(cluster=CA1noNA$cluster19), mean)
-cluster.descr19
-Mean19Cluster <- t(cluster.descr19)
-write.xlsx(Mean19Cluster, "Mean19Cluster.xlsx")
+                       # Cluster 2 (51): eher männlich, Bildung sehr durchmischt, stärkerer Migrationshintergrund,
+                       # streben vor allem nach Realschulabschluss, alle wollen ein Praktikum nach der Schule, Technik/Soziales/Gesundheit/Verwaltung
 
-freq(CA1noNA$cluster19) # erst bei der 19-Cluster-Lösung verteilen sich die Faelle besser
-                        # Allerdings hat Cluster 14 nur 5 Faelle, das größte Cluster (2) hat 699 Faelle
+                       # Cluster 3 (26): ueberwiegend Gymnasiasten + wenige Realschüler, kaum Migrationshintergrund, jobben und engagieren sich mehr, Hälfte hat festen Berufswunsch,
+                       # streben vor allem Studiengänge/Realschulabschl. an, alle wollen ein BFD in DE nach der Schule, ueberwiegend sozialer Beruf gewünscht, kaum Internetnutzung Jobsuche
+
+                       # Cluster 4 (24): entspricht sehr dem Cluster 2 bei der 2-Clusterloesung (Hauptschueler, streben Real/Studium an, alle Produktion, hohe Jobsorgen, hohe Selbstwirksamkeit)
+
+                       # Cluster 5 (26): ueberwiegend Gymnasiasten/Gesamtschueler, Migrationshintergrund (54%), stärkeres ehrenamtliches Engagement, wenig jobben/Praktikum, Ziel vor allem Studium,
+                       # auch Abi, alle wollen ein BFD im Ausland, wenigste haben festen Berufswunsch, Hauptinteressen: soziales, IT, Gesundheit#
+
+                       # Cluster 6 (5!!!): alle weiblich, Gesamt-/Realschule (eine HS), alle Migrationshintergrund, keine neben/Ferienjobs, kaum Engagement, "andere" Ziele beim Abschluss,
+                       # Nach Schule auslandsaufenthalt/weiterführende Schule/anderes, Alle Interesse Bereich Körperpflege/Beauty + ein anderes, keine Selbstwirksamkeit, dafür Sorgen & hohe Depressionswerte
+
+# 17 Cluster:
+cluster.descr17 <- aggregate(CA1noNA[,2:60], by=list(cluster=CA1noNA$cluster17), mean)
+cluster.descr17
+Mean17Cluster <- t(cluster.descr17)
+write.xlsx(Mean17Cluster, "Mean17Cluster.xlsx")
+
+freq(CA1noNA$cluster17) # erst bei der 17-Cluster-Lösung verteilen sich die Faelle besser
+                        # Allerdings hat Cluster 16 nur 5 Faelle, das größte Cluster (2) hat 708 Faelle
+
+                        # 
 
 
+Anzahl <- freq(CA1noNA$cluster17)
 
