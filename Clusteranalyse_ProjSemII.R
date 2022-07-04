@@ -24,13 +24,13 @@ CA <-Jugendstudie[,c("ID",
                      "birthcountry_out",
                      "migra",
                      "job_1","job_2",
-                     "engagement",                                   # Ehrenamt ja/nein
+                     "engagement",                                    # Ehrenamt ja/nein
                      "enga.1","enga.2","enga.3","enga.4","enga.5",
                      "enga.6","enga.7","enga.8","enga.9","enga.10",
                      "enga_barrier",                                  # Barrieren für Ehrenamt ja/nein
                      "enga_bar.1","enga_bar.2","enga_bar.3","enga_bar.4","enga_bar.5","enga_bar.6",
                      "asp_edu_1",                                     # Höchster Bildungswunsch (ordinal absteigend 1 bis 4 - weiß nicht ist 7, etwas anderes 5)
-                     "asp_edu_2",                                      # Was am liebsten nach jetziger Schule machen? (nominal)
+                     "asp_edu_2",                                     # Was am liebsten nach jetziger Schule machen? (nominal)
                      "asp_edu_3",
                      "workfield",                                     # Berufsfelder nominal
                      "workfield.1", "workfield.2", "workfield.3", "workfield.4", "workfield.5",
@@ -223,6 +223,7 @@ head(cluster17)
 CA1noNA$cluster17 <- cluster17
 summary(CA1noNA)
 
+
 #### Vergleich der Clustereigenschaften anhand der verwendeten Variablen
 # Ein Mittelwertvergleich der jeweiligen Cluster und ihrer Auspraegungen der Variablen + Gegenueberstellung mit transpose(t) 
 
@@ -254,7 +255,7 @@ freq(CA1noNA$cluster6) # Häufigstes Cluster: 1 (1510 Faelle) -> "Mainstream"?
                        # Cluster 4 (24): entspricht sehr dem Cluster 2 bei der 2-Clusterloesung (Hauptschueler, streben Real/Studium an, alle Produktion, hohe Jobsorgen, hohe Selbstwirksamkeit)
 
                        # Cluster 5 (26): ueberwiegend Gymnasiasten/Gesamtschueler, Migrationshintergrund (54%), stärkeres ehrenamtliches Engagement, wenig jobben/Praktikum, Ziel vor allem Studium,
-                       # auch Abi, alle wollen ein BFD im Ausland, wenigste haben festen Berufswunsch, Hauptinteressen: soziales, IT, Gesundheit#
+                       # auch Abi, alle wollen ein BFD im Ausland, wenigste haben festen Berufswunsch, Hauptinteressen: soziales, IT, Gesundheit
 
                        # Cluster 6 (5!!!): alle weiblich, Gesamt-/Realschule (eine HS), alle Migrationshintergrund, keine neben/Ferienjobs, kaum Engagement, "andere" Ziele beim Abschluss,
                        # Nach Schule auslandsaufenthalt/weiterführende Schule/anderes, Alle Interesse Bereich Körperpflege/Beauty + ein anderes, keine Selbstwirksamkeit, dafür Sorgen & hohe Depressionswerte
@@ -268,8 +269,24 @@ write.xlsx(Mean17Cluster, "Mean17Cluster.xlsx")
 freq(CA1noNA$cluster17) # erst bei der 17-Cluster-Lösung verteilen sich die Faelle besser
                         # Allerdings hat Cluster 16 nur 5 Faelle, das größte Cluster (2) hat 708 Faelle
 
-                        # 
+                        # Cluster 1 (40): 
 
+                        # ... ... ...
 
-Anzahl <- freq(CA1noNA$cluster17)
+# Wenn es nur 1 Cluster gäbe (Variablenmittelwerte)
+
+cluster1 <- cutree(HC, k = 1) 
+head(cluster1)
+CA1noNA$cluster1 <- cluster1
+summary(CA1noNA)
+
+cluster.descr1 <- aggregate(CA1noNA[,2:60], by=list(cluster=CA1noNA$cluster1), mean)
+cluster.descr1
+Mean1Cluster <- t(cluster.descr1)
+write.xlsx(Mean1Cluster, "Mean1Cluster.xlsx")
+
+freq(CA1noNA$cluster1) 
+
+###### Wir bleiben bei der 17 Cluster Lösung
+
 
