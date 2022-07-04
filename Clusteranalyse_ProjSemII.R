@@ -287,6 +287,6 @@ write.xlsx(Mean1Cluster, "Mean1Cluster.xlsx")
 
 freq(CA1noNA$cluster1) 
 
-###### Wir bleiben bei der 17 Cluster Lösung
+###### Wir bleiben vorerst bei der 17 Cluster Lösung, eventuell Variablen reduzieren
 
 
