@@ -69,7 +69,8 @@ CA$mentalhealth_dicho <- as.numeric(CA$mentalhealth_dicho)
 
 str(CA)
 
-### Clusteranalyse 1 - Schultypen
+### Umcodieren ###
+
 ## Alter gibts nicht?
 library(car)             # umcodieren von Variablen
 
@@ -288,5 +289,13 @@ write.xlsx(Mean1Cluster, "Mean1Cluster.xlsx")
 freq(CA1noNA$cluster1) 
 
 ###### Wir bleiben vorerst bei der 17 Cluster Lösung, eventuell Variablen reduzieren
+
+#### Clusteranalyse 2 ## 
+
+
+
+
+
+
 
 
