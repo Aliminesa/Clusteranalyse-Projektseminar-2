@@ -290,12 +290,59 @@ freq(CA1noNA$cluster1)
 
 ###### Wir bleiben vorerst bei der 17 Cluster Lösung, eventuell Variablen reduzieren
 
-#### Clusteranalyse 2 ## 
+#### Clusteranalyse 2 und 3 ####
 
+# Skalieren - Standardisierte Werte (Z-Transformation) erzeugen nur für Schultypen, Bildungsaspirationen (1-3) und Jobsorgen (ohne Geschlecht, etc.)
+CAv2 <- scale(CA1noNA[,c(3:7, 15:53)])
+CAv2
 
+# Ellbogenkriterium / Silhouette
+fviz_nbclust(CAv2, hcut, method = "wss", k.max = 30)
+geom_vline(xintercept = 5, linetype = 2)+
+  labs(subtitle = "Elbow method")
+# unterscheidet sich kaum von CA1
 
+fviz_nbclust(CAv2, hcut, method = "silhouette", k.max = 30)+
+  labs(subtitle = "Silhouette method")
 
+# Distanzmatrix
+d2 <- dist(CAv2, method = 'euclidean')
+d2ausg <- head(as.matrix(d2))
 
+# Dendrogramme erstellen
+HC2 <- hclust(d2, method="complete")
+fviz_dend(HC2, 27)
 
+# Skalieren - Standardisierte Werte (Z-Transformation) erzeugen nur für Schultypen, Bildungsaspirationen (1-3) und Jobsorgen (mit Geschlecht)
+CAv3 <- scale(CA1noNA[,c(2:7, 15:53)])
+CAv3
+
+# Ellbogenkriterium / Silhouette
+fviz_nbclust(CAv3, hcut, method = "wss", k.max = 30)
+geom_vline(xintercept = 5, linetype = 2)+
+  labs(subtitle = "Elbow method")
+# unterscheidet sich kaum von CA1
+
+fviz_nbclust(CAv3, hcut, method = "silhouette", k.max = 30)+
+  labs(subtitle = "Silhouette method")
+
+# Distanzmatrix
+d3 <- dist(CAv3, method = 'euclidean')
+d3ausg <- head(as.matrix(d3))
+
+# Dendrogramme erstellen
+HC3 <- hclust(d3, method="complete")
+fviz_dend(HC3, 18)
+
+########### Schlussfolgerungen aus den Versuchen mit weniger Variablen:
+### CA 2:
+# Höhepunkt der Silhouette-Methode bei 27 Clustern
+### CA 3:
+# Höhepunkt bei Silhouette-Methode bei 18 Clustern.
+
+## Vermutung: Die Schultypen, Bildungs- und Berufsfeldwünsche splitten die SchülerInnen in sehr viele Gruppen auf,
+#             die sich wiederum vor allem durch die Variable Geschlecht, aber auch durch die anderen Variablen stärker zusammenfassen lassen.
+#             Angesichts dieser Ergebnisse ist eine Clusterung über die Bildungsaspirationen hinaus, um einzelne Gruppen besser charakterisieren zu können, unerlässlich.
+#             Das Geschlecht scheint viele der Cluster zu erklären!
 
 
