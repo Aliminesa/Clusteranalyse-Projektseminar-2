@@ -202,7 +202,7 @@ d1ausg <- head(as.matrix(d1))
 HC <- hclust(d1, method="complete")
 #fviz_dend(HC)
 #fviz_dend(HC,2)  # Cluster 1 und 2 unterscheiden sich tendenziell in Bildung und Berufswunsch
-#fviz_dend(HC,5)  # erster Peak - Macht sich eine Clusterung durch die Schultypen bemerkbar?
+#fviz_dend(HC,6)  # erster Peak - Macht sich eine Clusterung durch die Schultypen bemerkbar?
 #fviz_dend(HC,17) # eventuell erst bei 17 Clustern ein Großteil der Befragten genauer eingruppiert, sonst viele Extrem-/Sonderfälle?
 
 ## Ableiten von Loesungen fuer die Cluster
