@@ -234,7 +234,7 @@ cluster.descr2
 Mean2Cluster <- t(cluster.descr2)
 write.xlsx(Mean2Cluster, "Mean2Cluster.xlsx")
 
-freq(CA1noNA$cluster2) # Cluster 2 kommt nur 29mal vor (1.77%), C1 1613 mal
+freq(CA1noNA$cluster2) # Cluster 2 kommt nur 29mal vor (1.77%), C1 1613 mal -> Mainstream?
                        # Die Frage wie es nach der Schule weiter geht hat sehr wenig Aussagekraft (Bildungsaspirationen 2)
                        # Cluster 2 hat einen bedeutend größeren Anteil an Hauptschülern, streben Real oder Studium an, häufiger fester Berufswunsch,
                        # auffaellig: Berufsbild Produktion/Fertigung sehr stark, stärkere Jobsorgen, aber höhere Selbstwirksamkeit
