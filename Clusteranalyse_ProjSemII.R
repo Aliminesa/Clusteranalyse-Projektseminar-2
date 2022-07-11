@@ -342,7 +342,7 @@ HC3 <- hclust(d3, method="complete")
 
 ## Vermutung: Die Schultypen, Bildungs- und Berufsfeldwünsche splitten die SchülerInnen in sehr viele Gruppen auf,
 #             die sich wiederum vor allem durch die Variable Geschlecht, aber auch durch die anderen Variablen stärker zusammenfassen lassen.
-#             Angesichts dieser Ergebnisse ist eine Clusterung über die Bildungsaspirationen hinaus, um einzelne Gruppen besser charakterisieren zu können, unerlässlich.
+#             Angesichts dieser Ergebnisse ist eine Clusterung über die Bildungsaspirationen hinaus, um einzelne Gruppen besser charakterisieren zu können, wichtig.
 #             Das Geschlecht scheint viele der Cluster zu erklären!
 
 
