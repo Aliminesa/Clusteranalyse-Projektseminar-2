@@ -272,7 +272,7 @@ freq(CA1noNA$cluster17) # erst bei der 17-Cluster-Lösung verteilen sich die Fae
 
                         # Cluster 1 (40): 
 
-                        # ... ... ...
+                        # ... ... ... -> siehe Mean17ClusterB_C.xlsx und Clusterbeschreibungen.docx
 
 # Wenn es nur 1 Cluster gäbe (Variablenmittelwerte)
 
@@ -288,7 +288,7 @@ write.xlsx(Mean1Cluster, "Mean1Cluster.xlsx")
 
 freq(CA1noNA$cluster1) 
 
-###### Wir bleiben vorerst bei der 17 Cluster Lösung, eventuell Variablen reduzieren
+###### Wir bleiben vorerst bei der 17 Cluster Lösung, versuchen aber weniger Variablen zu verwenden:
 
 #### Clusteranalyse 2 und 3 ####
 
@@ -340,9 +340,9 @@ HC3 <- hclust(d3, method="complete")
 ### CA 3:
 # Höhepunkt bei Silhouette-Methode bei 18 Clustern.
 
-## Vermutung: Die Schultypen, Bildungs- und Berufsfeldwünsche splitten die SchülerInnen in sehr viele Gruppen auf,
-#             die sich wiederum vor allem durch die Variable Geschlecht, aber auch durch die anderen Variablen stärker zusammenfassen lassen.
+## Vermutung: Die Schultypen, Bildungs- und Berufsfeldwünsche zeigen viele mögliche Wege nach dem Abschluss auf (27 Cluster).
+#             Vor allem durch die Variablen Geschlecht, aber auch durch andere Variablen, lassen sich diese Wege noch einmal stärker zusammenfassen (18, bzw. 17 Cluster).
 #             Angesichts dieser Ergebnisse ist eine Clusterung über die Bildungsaspirationen hinaus, um einzelne Gruppen besser charakterisieren zu können, wichtig.
-#             Das Geschlecht scheint viele der Cluster zu erklären!
+#             Das Geschlecht scheint wesentlichen Einfluss auf die Bildungs- und Berufswünsche der SchuelerInnen zu haben!
 
 
