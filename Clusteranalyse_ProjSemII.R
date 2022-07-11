@@ -236,7 +236,7 @@ write.xlsx(Mean2Cluster, "Mean2Cluster.xlsx")
 
 freq(CA1noNA$cluster2) # Cluster 2 kommt nur 29mal vor (1.77%), C1 1613 mal
                        # Die Frage wie es nach der Schule weiter geht hat sehr wenig Aussagekraft (Bildungsaspirationen 2)
-                       # Cluster 2 hat einen bedeutend größeren Anteil an Hauptschülern, streben Real oder Stdudium an, häufiger fester Berufswunsch,
+                       # Cluster 2 hat einen bedeutend größeren Anteil an Hauptschülern, streben Real oder Studium an, häufiger fester Berufswunsch,
                        # auffaellig: Berufsbild Produktion/Fertigung sehr stark, stärkere Jobsorgen, aber höhere Selbstwirksamkeit
 
 # 6 Cluster:
@@ -311,7 +311,7 @@ d2ausg <- head(as.matrix(d2))
 
 # Dendrogramme erstellen
 HC2 <- hclust(d2, method="complete")
-fviz_dend(HC2, 27)
+#fviz_dend(HC2, 27)
 
 # Skalieren - Standardisierte Werte (Z-Transformation) erzeugen nur für Schultypen, Bildungsaspirationen (1-3) und Jobsorgen (mit Geschlecht)
 CAv3 <- scale(CA1noNA[,c(2:7, 15:53)])
@@ -332,7 +332,7 @@ d3ausg <- head(as.matrix(d3))
 
 # Dendrogramme erstellen
 HC3 <- hclust(d3, method="complete")
-fviz_dend(HC3, 18)
+#fviz_dend(HC3, 18)
 
 ########### Schlussfolgerungen aus den Versuchen mit weniger Variablen:
 ### CA 2:
